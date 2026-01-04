@@ -121,12 +121,12 @@ export default function DisclaimerModal() {
 
           <p style={{ margin: "0 0 16px 0" }}>
             <strong style={{ color: "#FF6B35" }}>Use at Your Own Risk:</strong> This tool is provided
-            "as-is" without any warranties. Use this platform responsibly and do not use it to harass,
+            {`"as-is"`} without any warranties. Use this platform responsibly and do not use it to harass,
             defame, or harm others.
           </p>
 
           <p style={{ margin: 0, fontSize: 12, color: "#888", fontStyle: "italic" }}>
-            By clicking "I Understand and Accept", you acknowledge that you have read and understood
+            By clicking {`"I Understand and Accept"`}, you acknowledge that you have read and understood
             this disclaimer and agree to use this platform responsibly.
           </p>
         </div>

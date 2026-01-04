@@ -131,7 +131,7 @@ export default async function Home() {
             <SearchForm />
           </div>
           <p style={{ marginTop: 16, color: "#666", fontSize: 12 }}>
-            Unofficial tool — don't use it to harass people.
+            Unofficial tool — {`don't`} use it to harass people.
           </p>
         </InteractiveSection>
 
