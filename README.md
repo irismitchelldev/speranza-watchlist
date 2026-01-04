@@ -30,7 +30,7 @@ This tool is provided "as-is" without any warranties. Use this platform responsi
 - Log surface incidents (username + reason)
 - Background check profiles with tier rankings
 - Leaderboard of most reported usernames
-- Uses Vercel KV for storage
+- Uses Upstash Redis for storage (via Vercel Marketplace)
 - Rate limiting (one report per raider per IP per day)
 
 ## Setup
@@ -40,14 +40,17 @@ This tool is provided "as-is" without any warranties. Use this platform responsi
 npm install
 ```
 
-2. **Set up Vercel KV (Required):**
+2. **Set up Upstash Redis (Required):**
 
-   The app requires Vercel KV to store data. You have two options:
+   The app requires Upstash Redis to store data. You have two options:
 
-   **Option A: Using Vercel CLI (Recommended)**
+   **Option A: Using Vercel Marketplace (Recommended)**
    
-   - Go to [Vercel Dashboard](https://vercel.com/dashboard) → Storage → KV → Create Database
-   - Attach the database to your project
+   - Go to [Vercel Dashboard](https://vercel.com/dashboard) → Storage → Marketplace → Upstash
+   - Create a Redis database and attach it to your project
+   - Environment variables will be automatically added:
+     - `UPSTASH_REDIS_REST_URL`
+     - `UPSTASH_REDIS_REST_TOKEN`
    - Pull environment variables locally:
    ```bash
    vercel env pull .env.local
@@ -56,15 +59,13 @@ npm install
    **Option B: Manual Setup**
    
    - Create a `.env.local` file in the project root
-   - Add your Vercel KV credentials:
+   - Add your Upstash Redis credentials:
    ```env
-   KV_REST_API_URL=your_kv_rest_api_url_here
-   KV_REST_API_TOKEN=your_kv_rest_api_token_here
+   UPSTASH_REDIS_REST_URL=your_redis_url_here
+   UPSTASH_REDIS_REST_TOKEN=your_redis_token_here
    ```
    
-   You can find these values in:
-   - Vercel Dashboard → Your Project → Settings → Environment Variables
-   - Or: Vercel Dashboard → Storage → KV → Your Database → Settings
+   You can get these from your Upstash dashboard or Vercel project environment variables.
 
 3. Run development server:
 ```bash
@@ -75,9 +76,9 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 
 ## Troubleshooting
 
-If you see the error: `Missing required environment variables KV_REST_API_URL and KV_REST_API_TOKEN`
+If you see the error: `Missing required environment variables UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN`
 
-1. Make sure you've created a Vercel KV database
+1. Make sure you've created an Upstash Redis database via Vercel Marketplace
 2. Ensure the database is attached to your project
 3. Pull environment variables: `vercel env pull .env.local`
 4. Restart your dev server: `npm run dev`
@@ -89,5 +90,5 @@ Deploy to Vercel:
 vercel
 ```
 
-Make sure your Vercel KV database is connected to your project in the Vercel dashboard. The environment variables will be automatically available in production.
+Make sure your Upstash Redis database is connected to your project in the Vercel dashboard. The environment variables will be automatically available in production.
 

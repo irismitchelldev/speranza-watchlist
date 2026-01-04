@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { redis } from "@/lib/redis";
 import ReportForm from "@/components/ReportForm";
 import SearchForm from "@/components/SearchForm";
 import Leaderboard, { Row } from "@/components/Leaderboard";
@@ -7,7 +7,7 @@ import InteractiveSection from "@/components/InteractiveSection";
 
 async function getTop(limit = 25): Promise<Row[]> {
   try {
-    const items = await kv.zrange<string[]>("reports:z", 0, limit - 1, {
+    const items = await redis.zrange<string[]>("reports:z", 0, limit - 1, {
       rev: true,
       withScores: true,
     });
@@ -74,7 +74,7 @@ export default async function Home() {
           }}
         >
           <strong style={{ display: "block", marginBottom: 8, color: "#FF6B35", fontSize: 13 }}>
-            ⚠️ Vercel KV Not Configured
+            ⚠️ Upstash Redis Not Configured
           </strong>
           <pre
             style={{

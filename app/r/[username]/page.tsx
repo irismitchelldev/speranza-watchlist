@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { redis } from "@/lib/redis";
 import ReportForm from "@/components/ReportForm";
 import { tierFor } from "@/lib/tiers";
 import { isKvConfigured } from "@/lib/kv-check";
@@ -9,10 +9,10 @@ type Incident = { reason: string; at: number };
 
 async function getProfile(username: string) {
   try {
-    const count = Number((await kv.zscore("reports:z", username)) ?? 0);
+    const count = Number((await redis.zscore("reports:z", username)) ?? 0);
     const tier = tierFor(count);
 
-    const incidentsRaw = await kv.lrange<string[]>(`reports:l:${username}`, 0, 24);
+    const incidentsRaw = await redis.lrange<string[]>(`reports:l:${username}`, 0, 24);
     const incidents: Incident[] = incidentsRaw
       .map((s) => {
         try {
@@ -23,7 +23,7 @@ async function getProfile(username: string) {
       })
       .filter(Boolean) as Incident[];
 
-    const meta = (await kv.hgetall<Record<string, string | number>>(`reports:h:${username}`)) ?? {};
+    const meta = (await redis.hgetall<Record<string, string | number>>(`reports:h:${username}`)) ?? {};
     return { username, count, tier, incidents, meta };
   } catch (error) {
     console.error("Error fetching profile:", error);
@@ -94,10 +94,10 @@ export default async function RaiderPage({ params }: { params: { username: strin
           }}
         >
           <strong style={{ display: "block", marginBottom: 8, color: "#FF6B35", fontSize: 13 }}>
-            ⚠️ Vercel KV Not Configured
+            ⚠️ Upstash Redis Not Configured
           </strong>
           <p style={{ margin: 0, fontSize: 13, color: "#aaa" }}>
-            Please configure Vercel KV to view and save reports. See the homepage for setup instructions.
+            Please configure Upstash Redis to view and save reports. See the homepage for setup instructions.
           </p>
         </div>
       )}

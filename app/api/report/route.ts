@@ -1,4 +1,4 @@
-import { kv } from "@vercel/kv";
+import { redis } from "@/lib/redis";
 import { NextResponse } from "next/server";
 import { isKvConfigured } from "@/lib/kv-check";
 
@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     return NextResponse.json(
       { 
         ok: false, 
-        error: "Vercel KV is not configured. Please set up KV_REST_API_URL and KV_REST_API_TOKEN environment variables." 
+        error: "Upstash Redis is not configured. Please set up UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN environment variables." 
       }, 
       { status: 500 }
     );
@@ -71,7 +71,7 @@ export async function POST(req: Request) {
 
   try {
     // Check if this IP has already reported this username today
-    const existing = await kv.get(rateLimitKey);
+    const existing = await redis.get(rateLimitKey);
     if (existing) {
       return NextResponse.json(
         { 
@@ -83,18 +83,18 @@ export async function POST(req: Request) {
     }
 
     // Set rate limit key (expires in 25 hours to be safe, in case of timezone edge cases)
-    await kv.set(rateLimitKey, "1", { ex: 25 * 60 * 60 });
+    await redis.set(rateLimitKey, "1", { ex: 25 * 60 * 60 });
 
     // Count per username (sorted set = leaderboard)
-    const newCount = await kv.zincrby("reports:z", 1, username);
+    const newCount = await redis.zincrby("reports:z", 1, username);
 
     // Recent incidents per username (list, capped)
     const listKey = `reports:l:${username}`;
-    await kv.lpush(listKey, JSON.stringify({ reason, at: Date.now() }));
-    await kv.ltrim(listKey, 0, 24);
+    await redis.lpush(listKey, JSON.stringify({ reason, at: Date.now() }));
+    await redis.ltrim(listKey, 0, 24);
 
     // Metadata
-    await kv.hset(`reports:h:${username}`, {
+    await redis.hset(`reports:h:${username}`, {
       lastReportedAt: Date.now(),
       lastReason: reason,
     });
@@ -104,7 +104,7 @@ export async function POST(req: Request) {
   } catch (error) {
     console.error("Error saving report:", error);
     return NextResponse.json(
-      { ok: false, error: "Failed to save report. Please check your Vercel KV configuration." },
+      { ok: false, error: "Failed to save report. Please check your Upstash Redis configuration." },
       { status: 500 }
     );
   }
