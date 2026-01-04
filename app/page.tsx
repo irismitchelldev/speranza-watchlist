@@ -7,14 +7,16 @@ import InteractiveSection from "@/components/InteractiveSection";
 
 async function getTop(limit = 25): Promise<Row[]> {
   try {
-    const items = await redis.zrange<string[]>("reports:z", 0, limit - 1, {
+    const items = await redis.zrange<(string | number)[]>("reports:z", 0, limit - 1, {
       rev: true,
       withScores: true,
     });
-
+    
     const rows: Row[] = [];
     for (let i = 0; i < items.length; i += 2) {
-      rows.push({ username: items[i] as unknown as string, count: Number(items[i + 1]) });
+      const username = String(items[i]);
+      const count = Number(items[i + 1]);
+      rows.push({ username, count });
     }
     return rows;
   } catch (error) {
