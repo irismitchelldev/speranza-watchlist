@@ -3,11 +3,15 @@ import { NextResponse } from "next/server";
 import { isKvConfigured } from "@/lib/kv-check";
 
 function normalizeUsername(input: string) {
-  const u = input.trim().toLowerCase();
+  const u = input.trim();
   if (!u) return null;
-  // tweak allowed chars as needed
-  if (!/^[a-z0-9_.-]{1,32}$/.test(u)) return null;
-  return u;
+  // Embark ID must end with # followed by 4 digits (e.g., player#1234)
+  // Allow letters, numbers, underscore, dot, dash, and space before the #
+  if (!/^[a-zA-Z0-9_.\s-]+#\d{4}$/.test(u)) return null;
+  // Return lowercase for consistency, but preserve the #1234 part
+  const parts = u.split('#');
+  if (parts.length !== 2) return null;
+  return `${parts[0].toLowerCase()}#${parts[1]}`;
 }
 
 function normalizeReason(input: string) {
@@ -58,7 +62,7 @@ export async function POST(req: Request) {
   const reason = normalizeReason(String(form.get("reason") ?? ""));
 
   if (!username) {
-    return NextResponse.json({ ok: false, error: "Invalid username." }, { status: 400 });
+    return NextResponse.json({ ok: false, error: "Invalid Embark ID. Must be in format: name#1234" }, { status: 400 });
   }
   if (!reason) {
     return NextResponse.json({ ok: false, error: "Please add a short reason." }, { status: 400 });

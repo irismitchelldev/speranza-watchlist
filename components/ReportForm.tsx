@@ -64,9 +64,9 @@ export default function ReportForm({ defaultUsername = "" }: { defaultUsername?:
         name="username"
         value={username}
         onChange={(e) => setUsername(e.target.value)}
-        placeholder="username"
+        placeholder="player#1234"
         required
-        maxLength={32}
+        maxLength={40}
         style={{
           padding: "12px 14px",
           borderRadius: 4,

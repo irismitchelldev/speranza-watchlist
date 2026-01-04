@@ -35,3 +35,8 @@ html {
   scroll-behavior: smooth;
 }
 
+/* Geo font for headers */
+h1, h2, h3 {
+  font-family: var(--font-geo), sans-serif;
+}
+

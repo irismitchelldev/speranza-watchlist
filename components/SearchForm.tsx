@@ -23,9 +23,9 @@ export default function SearchForm() {
       <input
         value={u}
         onChange={(e) => setU(e.target.value)}
-        placeholder="username"
+        placeholder="player#1234"
         required
-        maxLength={32}
+        maxLength={40}
         style={{
           flex: 1,
           padding: "12px 14px",

@@ -44,7 +44,7 @@ export default async function Home() {
           Speranza Watchlist
         </h1>
         <p style={{ marginTop: 0, color: "#888", fontSize: 14, fontWeight: 400 }}>
-          Log a surface incident. Then run a background check on a raider.
+          Log a surface incident. Then run a background check on a raider by their Embark ID.
         </p>
         <p
           style={{
@@ -59,7 +59,7 @@ export default async function Home() {
         >
           <strong style={{ color: "#FF6B35" }}>Disclaimer:</strong> This is an unofficial, fan-made tool.
           All content is user-generated and unverified. Operators are not responsible for accuracy,
-          harassment, or misuse. Use at your own risk and responsibly.
+          harassment, or misuse. Use at your own risk and responsibly. Embark IDs must be in format: name#1234
         </p>
       </header>
 

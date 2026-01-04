@@ -38,7 +38,13 @@ async function getProfile(username: string) {
 }
 
 export default async function RaiderPage({ params }: { params: { username: string } }) {
-  const username = params.username.toLowerCase();
+  // Decode and preserve Embark ID format (keep #1234 part)
+  const decoded = decodeURIComponent(params.username);
+  // Convert to lowercase but preserve the #1234 part
+  const parts = decoded.split('#');
+  const username = parts.length === 2 
+    ? `${parts[0].toLowerCase()}#${parts[1]}`
+    : decoded.toLowerCase();
   const kvConfigured = isKvConfigured();
   const p = await getProfile(username);
 
@@ -82,6 +88,9 @@ export default async function RaiderPage({ params }: { params: { username: strin
       >
         Raider Background Check
       </h1>
+      <p style={{ marginTop: 0, marginBottom: 24, color: "#888", fontSize: 12 }}>
+        Embark ID format: name#1234
+      </p>
 
       {!kvConfigured && (
         <div
@@ -115,7 +124,7 @@ export default async function RaiderPage({ params }: { params: { username: strin
                 fontWeight: 500,
               }}
             >
-              Username
+              Embark ID
             </div>
             <div
               style={{
@@ -164,6 +173,22 @@ export default async function RaiderPage({ params }: { params: { username: strin
             >
               Reports: <strong style={{ color: "#FF6B35" }}>{p.count}</strong>
             </div>
+            {p.incidents.length > 0 && (
+              <div
+                style={{
+                  fontSize: 11,
+                  color: "#666",
+                  fontFamily: "ui-monospace, monospace",
+                  marginTop: 8,
+                }}
+              >
+                Last: {new Date(p.incidents[0].at).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </div>
+            )}
           </div>
         </div>
       </InteractiveCard>
@@ -185,25 +210,49 @@ export default async function RaiderPage({ params }: { params: { username: strin
         <p style={{ color: "#666", fontSize: 14 }}>No incidents logged yet.</p>
       ) : (
         <ul style={{ paddingLeft: 0, listStyle: "none", margin: 0 }}>
-          {p.incidents.map((i, idx) => (
-            <InteractiveListItem key={idx} isLast={idx === p.incidents.length - 1}>
-              <div style={{ color: "#e0e0e0", fontSize: 14, marginBottom: 6, lineHeight: 1.5 }}>
-                {i.reason}
-              </div>
-              <div
-                style={{
-                  color: "#666",
-                  fontSize: 11,
-                  fontFamily: "ui-monospace, monospace",
-                  textTransform: "uppercase",
-                  letterSpacing: "0.5px",
-                  transition: "color 0.2s ease",
-                }}
-              >
-                {new Date(i.at).toLocaleString()}
-              </div>
-            </InteractiveListItem>
-          ))}
+          {p.incidents.map((i, idx) => {
+            const reportDate = new Date(i.at);
+            const dateStr = reportDate.toLocaleDateString("en-US", {
+              year: "numeric",
+              month: "short",
+              day: "numeric",
+            });
+            const timeStr = reportDate.toLocaleTimeString("en-US", {
+              hour: "2-digit",
+              minute: "2-digit",
+            });
+            
+            return (
+              <InteractiveListItem key={idx} isLast={idx === p.incidents.length - 1}>
+                <div style={{ color: "#e0e0e0", fontSize: 14, marginBottom: 8, lineHeight: 1.5 }}>
+                  {i.reason}
+                </div>
+                <div style={{ display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
+                  <div
+                    style={{
+                      color: "#888",
+                      fontSize: 12,
+                      fontFamily: "ui-monospace, monospace",
+                      fontWeight: 500,
+                    }}
+                  >
+                    {dateStr}
+                  </div>
+                  <div
+                    style={{
+                      color: "#666",
+                      fontSize: 11,
+                      fontFamily: "ui-monospace, monospace",
+                      textTransform: "uppercase",
+                      letterSpacing: "0.5px",
+                    }}
+                  >
+                    {timeStr}
+                  </div>
+                </div>
+              </InteractiveListItem>
+            );
+          })}
         </ul>
       )}
 

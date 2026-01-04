@@ -1,6 +1,6 @@
 # Speranza Watchlist
 
-A Next.js app for tracking username reports with a Speranza-style interface.
+A Next.js app for tracking Embark ID reports with a Speranza-style interface.
 
 ## ⚠️ Important Disclaimer
 
@@ -27,9 +27,9 @@ This tool is provided "as-is" without any warranties. Use this platform responsi
 
 ## Features
 
-- Log surface incidents (username + reason)
+- Log surface incidents (Embark ID + reason)
 - Background check profiles with tier rankings
-- Leaderboard of most reported usernames
+- Leaderboard of most reported Embark IDs
 - Uses Upstash Redis for storage (via Vercel Marketplace)
 - Rate limiting (one report per raider per IP per day)
 
