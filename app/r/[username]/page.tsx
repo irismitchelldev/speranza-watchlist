@@ -12,8 +12,9 @@ async function getProfile(username: string) {
     const count = Number((await redis.zscore("reports:z", username)) ?? 0);
     const tier = tierFor(count);
 
-    const incidentsRaw = await redis.lrange<string[]>(`reports:l:${username}`, 0, 24);
+    const incidentsRaw = await redis.lrange<unknown[]>(`reports:l:${username}`, 0, 24);
     const incidents: Incident[] = incidentsRaw
+      .map((v) => String(v))
       .map((s) => {
         try {
           return JSON.parse(s) as Incident;
