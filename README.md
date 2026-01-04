@@ -49,8 +49,8 @@ npm install
    - Go to [Vercel Dashboard](https://vercel.com/dashboard) → Storage → Marketplace → Upstash
    - Create a Redis database and attach it to your project
    - Environment variables will be automatically added:
-     - `UPSTASH_REDIS_REST_URL`
-     - `UPSTASH_REDIS_REST_TOKEN`
+     - `REDIS_URL`
+     - `REDIS_TOKEN`
    - Pull environment variables locally:
    ```bash
    vercel env pull .env.local
@@ -61,8 +61,8 @@ npm install
    - Create a `.env.local` file in the project root
    - Add your Upstash Redis credentials:
    ```env
-   UPSTASH_REDIS_REST_URL=your_redis_url_here
-   UPSTASH_REDIS_REST_TOKEN=your_redis_token_here
+   REDIS_URL=your_redis_url_here
+   REDIS_TOKEN=your_redis_token_here
    ```
    
    You can get these from your Upstash dashboard or Vercel project environment variables.
@@ -76,7 +76,7 @@ Open [http://localhost:3000](http://localhost:3000) to see the app.
 
 ## Troubleshooting
 
-If you see the error: `Missing required environment variables UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN`
+If you see the error: `Missing required environment variables REDIS_URL and REDIS_TOKEN`
 
 1. Make sure you've created an Upstash Redis database via Vercel Marketplace
 2. Ensure the database is attached to your project

@@ -3,8 +3,8 @@
  */
 export function isKvConfigured(): boolean {
   return !!(
-    process.env.UPSTASH_REDIS_REST_URL &&
-    process.env.UPSTASH_REDIS_REST_TOKEN
+    process.env.REDIS_URL &&
+    process.env.REDIS_TOKEN
   );
 }
 
@@ -17,12 +17,12 @@ Upstash Redis is not configured. Please:
 1. Go to Vercel Dashboard → Storage → Marketplace → Upstash
 2. Create a Redis database and attach it to your project
 3. Environment variables will be automatically added:
-   UPSTASH_REDIS_REST_URL
-   UPSTASH_REDIS_REST_TOKEN
+   REDIS_URL
+   REDIS_TOKEN
 
 Or manually add to .env.local:
-UPSTASH_REDIS_REST_URL=your_url_here
-UPSTASH_REDIS_REST_TOKEN=your_token_here
+REDIS_URL=your_url_here
+REDIS_TOKEN=your_token_here
   `.trim();
 }
 

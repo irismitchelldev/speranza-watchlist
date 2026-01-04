@@ -44,10 +44,10 @@ function getTodayDateString(): string {
 
 export async function POST(req: Request) {
   if (!isKvConfigured()) {
-    return NextResponse.json(
+      return NextResponse.json(
       { 
         ok: false, 
-        error: "Upstash Redis is not configured. Please set up UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN environment variables." 
+        error: "Upstash Redis is not configured. Please set up REDIS_URL and REDIS_TOKEN environment variables." 
       }, 
       { status: 500 }
     );
